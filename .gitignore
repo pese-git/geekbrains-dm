@@ -226,3 +226,7 @@ pyvenv.cfg
 pip-selfcheck.json
 
 .idea/
+
+temp.html
+temp.json
+products/**

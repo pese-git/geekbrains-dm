@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import bs4
 
 from database.db import Database
+from datetime import datetime
 
 
 class GbBlogParse:
@@ -37,6 +38,10 @@ class GbBlogParse:
                 self.done_urls.add(link)
                 self.tasks.append(task)
 
+    def _parse_date(self, date_str):
+
+        return datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S%z")
+
     def _parse_feed(self, url, soup) -> None:
         ul = soup.find("ul", attrs={"class": "gb__pagination"})
         self.__create_task(url, self._parse_feed, ul.find_all("a"))
@@ -45,9 +50,14 @@ class GbBlogParse:
 
     def _parse_post(self, url, soup) -> dict:
         author_name_tag = soup.find("div", attrs={"itemprop": "author"})
-        post_title = soup.find("h1", attrs={"class", "blogpost-title"}).text
+        post_title = soup.find("h1", attrs={"class": "blogpost-title"}).text
+        post_date = soup.find("time", attrs={"itemprop": "datePublished"}).attrs.get("datetime")
         data = {
-            "post_data": {"url": url, "title": post_title},
+            "post_data": {
+                "url": url,
+                "title": post_title,
+                "create_at": self._parse_date(post_date),
+            },
             "author": {
                 "name": author_name_tag.text,
                 "url": urljoin(url, author_name_tag.parent.attrs.get("href")),

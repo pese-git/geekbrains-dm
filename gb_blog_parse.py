@@ -3,9 +3,12 @@ import typing
 from urllib.parse import urljoin
 import bs4
 
+from database.db import Database
+
 
 class GbBlogParse:
-    def __init__(self, start_url):
+    def __init__(self, start_url, database: Database):
+        self.db = database
         self.start_url = start_url
         self.done_urls = set()
         self.tasks = []
@@ -70,10 +73,13 @@ class GbBlogParse:
             result = task()
             if isinstance(result, dict):
                 print(result)
+                self.db.create_post(result)
             print(1)
 
 
 if __name__ == "__main__":
+    db = Database("sqlite:///gd_blog.db")
     url = "https://geekbrains.ru/posts/"
-    parser = GbBlogParse(url)
+    parser = GbBlogParse(url, db)
+
     parser.run()

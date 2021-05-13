@@ -31,24 +31,24 @@ class AutoyoulaSpider(scrapy.Spider):
         super().__init__(*args, **kwargs)
         self.db_client = pymongo.MongoClient()
 
-    def _get_follow(self, response, selector_str, callback):
+    def _get_follow(self, response, selector_str, callback, cb_kwargs={}):
         for itm in response.xpath(selector_str):
-            yield response.follow(itm, callback=callback)
+            yield response.follow(itm, callback=callback, cb_kwargs=cb_kwargs)
 
     def parse(self, response, *args, **kwargs):
         yield from self._get_follow(
-            response, self._xpath_selectors["brands"], self.brand_parse,
+            response, self._xpath_selectors["brands"], self.brand_parse, {"one": " hello"}
         )
 
-    def brand_parse(self, response):
+    def brand_parse(self, response, **kwargs):
         yield from self._get_follow(
             response, self._xpath_selectors["pagination"], self.brand_parse
         )
         yield from self._get_follow(
-            response, self._xpath_selectors["car"], self.car_parse,
+            response, self._xpath_selectors["car"], self.car_parse, {"two": " hello"}
         )
 
-    def car_parse(self, response):
+    def car_parse(self, response, **kwargs):
         loader = AutoyoulaLoader(response=response)
         loader.add_value("url", response.url)
         for key, xpath in self._xpath_data_selectors.items():

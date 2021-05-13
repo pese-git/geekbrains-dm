@@ -6,8 +6,9 @@
 
 # useful for handling different item types with a single interface
 # from itemadapter import ItemAdapter
+from scrapy import Request
+from scrapy.pipelines.images import ImagesPipeline
 from .settings import BOT_NAME
-from .settings import BOT_NAME_HH
 from pymongo import MongoClient
 
 
@@ -26,14 +27,12 @@ class GbMongoPipeline:
         return item
 
 
-class GbParseHHMongoPipline:
-    def __init__(self):
-        client = MongoClient()
-        self.db = client[BOT_NAME_HH]
+class GbImageDownloadPipeline(ImagesPipeline):
+    def get_media_requests(self, item, info):
+        for url in item.get("photos", []):
+            yield Request(url)
 
-    def process_item(self, item, spider):
-        if item.get("employer_name"):
-            self.db["employer_info"].insert_one(item)
-        else:
-            self.db["vacancy"].insert_one(item)
+    def item_completed(self, results, item, info):
+        if item.get("photos"):
+            item["photos"] = [itm[1] for itm in results]
         return item

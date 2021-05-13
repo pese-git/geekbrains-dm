@@ -1,9 +1,9 @@
+import re
+from urllib.parse import urljoin
+
 from scrapy import Selector
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst, MapCompose
-
-import re
-from urllib.parse import urljoin
 
 
 def clear_price(price):
@@ -37,6 +37,14 @@ def get_author_id(text):
     return user_link
 
 
+def flat_text(items):
+    return "\n".join(items)
+
+
+def hh_user_url(user_id):
+    return urljoin("https://hh.ru/", user_id)
+
+
 class AutoyoulaLoader(ItemLoader):
     default_item_class = dict
     url_out = TakeFirst()
@@ -49,28 +57,12 @@ class AutoyoulaLoader(ItemLoader):
     author_out = TakeFirst()
 
 
-# -------------------
-
-
-def create_author_url(item):
-    selector = Selector(text=item)
-    url = selector.xpath("//@href").get()
-    return urljoin("https://hh.ru/", url)
-
-
-def create_text(item):
-    return "".join(item)
-
-
-class HeadHunterLoader(ItemLoader):
+class HHLoader(ItemLoader):
     default_item_class = dict
+    url_out = TakeFirst()
     title_out = TakeFirst()
-    hh_employer_url_in = MapCompose(create_author_url)
-    hh_employer_url_out = TakeFirst()
-    salary_out = create_text
-    description_out = create_text
-
-    employer_name_out = TakeFirst()
-    employer_website_out = TakeFirst()
-    description_employer_out = create_text
-    employer_link_hh_out = TakeFirst()
+    salary_out = flat_text
+    # description_in = flat_text,
+    # description_out = flat_text,
+    author_in = MapCompose(hh_user_url)
+    author_out = TakeFirst()

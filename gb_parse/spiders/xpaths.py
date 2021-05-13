@@ -63,4 +63,7 @@ AVITO_XPATH = {
     '//span[@class="item-address__string"]//text()',
     "author": '//div[@class="item-view-content"]//'
     'div[@class="seller-info-value"]/div[@class="seller-info-name js-seller-info-name"]/a/@href',
+    "characteristics": {
+        "xpath": '//div[@class="item-params"]/ul[@class="item-params-list"]/li[@class="item-params-list-item"]'
+    },
 }

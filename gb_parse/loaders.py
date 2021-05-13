@@ -66,3 +66,14 @@ class HHLoader(ItemLoader):
     # description_out = flat_text,
     author_in = MapCompose(hh_user_url)
     author_out = TakeFirst()
+
+
+class AvitoApartment(ItemLoader):
+    default_item_class = dict
+    url_out = TakeFirst()
+    title_out = TakeFirst()
+    amount_out = TakeFirst()
+    currency_symbol_out = TakeFirst()
+    description_out = TakeFirst()
+    address_out = TakeFirst()
+    author_out = TakeFirst()

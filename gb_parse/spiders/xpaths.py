@@ -42,3 +42,25 @@ HH_VACANCY_XPATH = {
     'span[@data-qa="bloko-tag__text"]/text()',
     "author": '//a[@data-qa="vacancy-company-name"]/@href',
 }
+
+
+AVITO_PAGE_XPATH = {
+    "pagination": '//div[@data-marker="pagination-button"]//span[contains(@data-marker,"page")]/text()',
+    "apartment": '//div[@data-marker="item"]//a/@href',
+}
+
+AVITO_XPATH = {
+    "title": '//div[@class="item-view-content"]//'
+    'div[@class="item-view-content-left"]/span[@class="title-info-title-text"]/text()',
+    "amount": '//div[@class="item-view-content"]//'
+    'div[@class="item-price-wrapper"]//span[@itemprop="price"]/text()',
+    "currency_symbol": '//div[@class="item-view-content"]//'
+    'div[@class="item-price-wrapper"]//span[@class="font_arial-rub"]/text()',
+    "description": '//div[@class="item-view-content"]//'
+    'div[@class="item-description"]/div[@itemprop="description"]/p/text()',
+    "address": '//div[@class="item-view-content"]//'
+    'div[@class="item-address"]//div[@itemprop="address"]'
+    '//span[@class="item-address__string"]//text()',
+    "author": '//div[@class="item-view-content"]//'
+    'div[@class="seller-info-value"]/div[@class="seller-info-name js-seller-info-name"]/a/@href',
+}

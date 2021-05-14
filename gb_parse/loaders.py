@@ -83,6 +83,10 @@ def get_apartment_characteristics(item: str) -> dict:
     return data
 
 
+def clear_text(text: str):
+    return text.strip("\n\t")
+
+
 class AvitoApartment(ItemLoader):
     default_item_class = dict
     url_out = TakeFirst()
@@ -90,6 +94,7 @@ class AvitoApartment(ItemLoader):
     amount_out = TakeFirst()
     currency_symbol_out = TakeFirst()
     description_out = TakeFirst()
+    address_in = MapCompose(clear_text)
     address_out = TakeFirst()
     author_out = TakeFirst()
     characteristics_in = MapCompose(get_apartment_characteristics)

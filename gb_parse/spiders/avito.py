@@ -43,6 +43,9 @@ class AvitoSpider(scrapy.Spider):
         loader = AvitoApartment(response=response)
         loader.add_value("url", response.url)
         for key, xpath in AVITO_XPATH.items():
-            loader.add_xpath(key, xpath)
+            try:
+                loader.add_xpath(key, xpath)
+            except TypeError:
+                pass
 
         yield loader.load_item()

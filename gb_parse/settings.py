@@ -7,15 +7,13 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "gb_parse_avito_20_04_2021"
+BOT_NAME = "gb_parse_instagram_20_04_2021"
 
 SPIDER_MODULES = ["gb_parse.spiders"]
 NEWSPIDER_MODULE = "gb_parse.spiders"
 
 LOG_ENABLE = True
 LOG_LEVEL = "DEBUG"
-IMAGES_STORE = "images"
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
 
@@ -23,12 +21,12 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.05
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -37,7 +35,7 @@ DOWNLOAD_DELAY = 1
 COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
-TELNETCONSOLE_ENABLED = False
+# TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
@@ -53,11 +51,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    # 'gb_parse.middlewares.GbParseDownloaderMiddleware': 543,
-    "rotating_proxies.middlewares.RotatingProxyMiddleware": 610,
-    "rotating_proxies.middlewares.BanDetectionMiddleware": 620,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#    'gb_parse.middlewares.GbParseDownloaderMiddleware': 543,
+# }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -67,15 +63,21 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
+IMAGES_STORE = "images"
+
 ITEM_PIPELINES = {
     "gb_parse.pipelines.GbParsePipeline": 300,
-    "gb_parse.pipelines.GbMongoPipeline": 400,
-    "gb_parse.pipelines.GbImageDownloadPipeline": 350,
+    # "gb_parse.pipelines.GbImageDownloadPipeline": 350,
+    "gb_parse.pipelines.GbParseInstagramPostImageDownloadPipeline": 350,
+    # 'gb_parse.pipelines.GbParseMongoPipeline': 400
+    # "gb_parse.pipelines.GbParseHHMongoPipline": 500,
+    "gb_parse.pipelines.GbParseInstagramMongoPipline": 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = False
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 AUTOTHROTTLE_START_DELAY = 2
 # The maximum download delay to be set in case of high latencies
@@ -93,4 +95,3 @@ AUTOTHROTTLE_DEBUG = True
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-ROTATING_PROXY_LIST_PATH = "proxies"

@@ -36,3 +36,30 @@ class GbImageDownloadPipeline(ImagesPipeline):
         if item.get("photos"):
             item["photos"] = [itm[1] for itm in results]
         return item
+
+
+class GbParseInstagramMongoPipline:
+    def __init__(self):
+        client = MongoClient()
+        self.db = client[BOT_NAME]
+        self.collection = self.db["tags"]
+
+    def process_item(self, item, spider):
+        if item.get("data").get("name"):
+            if len(list(self.collection.find({"_id": item["_id"]}))) == 0:
+                self.db["tags"].insert_one(item)
+            return item
+        self.db["posts"].insert_one(item)
+        return item
+
+
+class GbParseInstagramPostImageDownloadPipeline(ImagesPipeline):
+    def get_media_requests(self, item, info):
+        img_url = item.get("data", {}).get("photo")
+        if img_url:
+            yield Request(img_url)
+
+    def item_completed(self, results, item, info):
+        if results:
+            item["photos"] = [itm[1] for itm in results]
+        return item

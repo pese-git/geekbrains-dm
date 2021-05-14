@@ -77,7 +77,9 @@ def get_apartment_characteristics(item: str) -> dict:
     data["name"] = selector.xpath(
         '/li[@class="item-params-list-item"]/span[@class="item-params-label"]/text()'
     ).extract_first()
-    data["value"] = selector.xpath('/li[@class="item-params-list-item"]/text()').extract_first()
+    data["value"] = selector.xpath(
+        '/li[@class="item-params-list-item"]/text()[normalize-space()]'
+    ).extract_first()
     return data
 
 

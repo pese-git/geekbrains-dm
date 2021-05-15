@@ -8,13 +8,14 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "gb_parse_instagram_20_04_2021"
+LOG_ENABLE = True
+LOG_LEVEL = "DEBUG"
+# LOG_LEVEL = "INFO"
+# LOG_FILE = 'scrapy2.log'
 
 SPIDER_MODULES = ["gb_parse.spiders"]
 NEWSPIDER_MODULE = "gb_parse.spiders"
 
-LOG_ENABLE = True
-LOG_LEVEL = "DEBUG"
-IMAGES_STORE = "images"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
@@ -22,16 +23,24 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+IMAGES_STORE = "images"
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 3  # 8 64
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.05
+DOWNLOAD_DELAY = 2  # 1 1.2 1.8
+RANDOMIZE_DOWNLOAD_DELAY = True
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
-# CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 3  # 8 64
+CONCURRENT_REQUESTS_PER_IP = 3
+
+DEPTH_PRIORITY = 1
+SCHEDULER_DISK_QUEUE = "scrapy.squeues.PickleFifoDiskQueue"
+SCHEDULER_MEMORY_QUEUE = "scrapy.squeues.FifoMemoryQueue"
+
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
@@ -54,9 +63,7 @@ DEFAULT_REQUEST_HEADERS = {
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#     # 'gb_parse.middlewares.GbParseDownloaderMiddleware': 543,
-#     "rotating_proxies.middlewares.RotatingProxyMiddleware": 610,
-#     "rotating_proxies.middlewares.BanDetectionMiddleware": 620,
+#    'gb_parse.middlewares.GbParseDownloaderMiddleware': 543,
 # }
 
 # Enable or disable extensions
@@ -68,18 +75,18 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "gb_parse.pipelines.GbParsePipeline": 300,
-    "gb_parse.pipelines.GbMongoPipeline": 400,
-    "gb_parse.pipelines.GbImageDownloadPipeline": 350,
+    # 'gb_parse.pipelines.GbImagePipeline': 100,
+    # 'gb_parse.pipelines.GbInstagramImagePipeline': 100,
+    "gb_parse.pipelines.GbParsePipeline": 200,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = False
+# AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-AUTOTHROTTLE_START_DELAY = 2
+# AUTOTHROTTLE_START_DELAY = 3  # 5
 # The maximum download delay to be set in case of high latencies
-AUTOTHROTTLE_MAX_DELAY = 10
+# AUTOTHROTTLE_MAX_DELAY = 15  #  60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
 # AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
@@ -93,4 +100,3 @@ AUTOTHROTTLE_DEBUG = True
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-ROTATING_PROXY_LIST_PATH = "proxies"
